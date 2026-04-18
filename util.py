@@ -1,9 +1,8 @@
-from langchain.chat_models import ErnieBotChat
+
 from langchain.llms.ollama import Ollama
 from pandasai.llm import OpenAI, LangchainLLM
 from pandasai.prompts import GeneratePythonCodePrompt
 
-from llm.ais_erniebot import AIStudioErnieBot
 from llm.google_gemini import GoogleGeminiChat
 
 
