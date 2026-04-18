@@ -29,14 +29,6 @@ It enables users to upload structured datasets (Excel/CSV) and interact with the
 
 ---
 
-## 📸 Screenshots
-
-![Screenshot1](docs/images/screen1.png?raw=true)
-![Screenshot2](docs/images/screen2.png?raw=true)
-![Screenshot3](docs/images/screen3.png?raw=true)
-
----
-
 ## 🎯 Use Cases
 
 - Business data exploration without technical expertise  
