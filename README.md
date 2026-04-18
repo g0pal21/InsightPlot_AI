@@ -1,20 +1,59 @@
-# ExcelChat
-ExcelChat is a AI powered app built on [pandas-ai](https://github.com/gventuri/pandas-ai) and [streamlit](https://github.com/streamlit/streamlit). Upload an excel file, then you can chat with it like chatGPT.
+# InsightPilot AI 🚀  
+### Your Intelligent Data Analyst
 
-Currently the following models are supported. 
- * OpenAI
- * Ollama: starcoder:7b, codellama:7b-instruct-q8_0, zephyr:7b-alpha-q8_0 
- * Baidu/AIStudio-Ernie-Bot, baidu ernie-bot model for ai studio (single thread mode, not suitable for multi-tenant usage)
- * Baidu/Qianfan-Ernie-Bot, the recommended way to use baidu ernie bot model
+InsightPilot AI is an enterprise-grade AI-powered data analysis assistant built using **Streamlit**, **PandasAI**, and **Large Language Models (LLMs)**.
 
-Here are some screenshot.
+It enables users to upload structured datasets (Excel/CSV) and interact with them using **natural language**, eliminating the need for SQL or manual analysis.
+
+---
+
+## 🔍 Key Features
+
+- 💬 Conversational data analysis (Chat with your data)
+- 📊 Automatic chart generation and visual insights
+- 🧠 Context-aware multi-turn conversations (memory enabled)
+- ⚡ No SQL or coding required
+- 🌍 Supports multilingual datasets and queries
+- 🔄 Multi-model support (Cloud + Local)
+
+---
+
+## 🧠 Supported AI Engines
+
+- **OpenAI (Cloud)** – Enterprise-grade performance  
+- **Google Gemini (Cloud)** – Alternative LLM provider  
+- **Ollama (Local)** – Run models locally for data privacy  
+  - qwen3:8b  
+  - llama3:8b  
+  - mistral:7b  
+
+---
+
+## 📸 Screenshots
 
 ![Screenshot1](docs/images/screen1.png?raw=true)
 ![Screenshot2](docs/images/screen2.png?raw=true)
 ![Screenshot3](docs/images/screen3.png?raw=true)
 
-## Demo
- https://excelchat.streamlit.app
+---
+
+## 🎯 Use Cases
+
+- Business data exploration without technical expertise  
+- Quick insights from project management / finance datasets  
+- Automated reporting and visualization  
+- Ad-hoc analysis using natural language  
+
+---
+
+## 🚀 Demo
+
+👉 *(Add your deployed link here)*  
+Example: https://insightpilot.streamlit.app  
+
+---
+
+## ⚙️ Installation
 
 ## Requirements
 Python >= 3.9.
@@ -28,3 +67,4 @@ Run the following command in the terminal, then you will get the app's link open
 ```shell
 streamlit run Home.py
 ```
+# InsightPlot_AI
