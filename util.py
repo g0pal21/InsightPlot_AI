@@ -4,6 +4,7 @@ from pandasai.llm import OpenAI, LangchainLLM
 from pandasai.prompts import GeneratePythonCodePrompt
 
 from llm.ais_erniebot import AIStudioErnieBot
+from llm.google_gemini import GoogleGeminiChat
 
 
 def get_open_ai_model(api_key):
@@ -15,27 +16,21 @@ def get_ollama_model(model_key, base_url):
     return LangchainLLM(langchain_llm=llm)
 
 
-def get_baidu_as_model(access_token):
-    llm_core = AIStudioErnieBot(access_token=access_token, verbose=True)
-    return LangchainLLM(llm_core)
-
-
-def get_baidu_qianfan_model(client_id, client_secret):
-    llm_core = ErnieBotChat(
-        model_name="ERNIE-Bot",
-        temperature=0.1,
-        ernie_client_id=client_id,
-        ernie_client_secret=client_secret
+def get_google_gemini_model(api_key, model_name):
+    llm_core = GoogleGeminiChat(
+        google_api_key=api_key,
+        model_name=model_name,
+        temperature=0.1
     )
     return LangchainLLM(llm_core)
 
 
 def get_prompt_template():
     instruction_template = """
-使用提供的 dataframes ('dfs') 分析这个数据，过程中不要调用 dataframe set_index 对数据排序.
-1. 准备: 如果有必要对数据做预处理和清洗
-2. 执行: 对数据进行数据分析操作 (grouping, filtering, aggregating, etc.)
-3. 分析: 进行实际分析（如果用户要求plot chart，请在代码中添加如下两行代码设置字体, 并将结果保存为图像文件temp_chart.png，并且不显示图表）
+Use the provided dataframe(s) in 'dfs' to analyze the data. Do not call dataframe.set_index() to sort the data.
+1. Preparation: Preprocess and clean the data if needed.
+2. Execution: Perform data analysis operations such as grouping, filtering, aggregating, and similar transformations.
+3. Analysis: Complete the requested analysis. If the user asks for a chart, add the following two lines to configure the font, save the chart as temp_chart.png, and do not display the chart directly.
 plt.rcParams['font.sans-serif']=['SimHei']
 plt.rcParams['axes.unicode_minus']=False    
     """

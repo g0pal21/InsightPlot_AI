@@ -14,7 +14,12 @@ from pandasai.helpers import Logger
 
 from middleware.base import CustomChartsMiddleware
 from parser.response_parser import CustomResponseParser
-from util import get_open_ai_model, get_ollama_model, get_baidu_as_model, get_prompt_template, get_baidu_qianfan_model
+from util import (
+    get_open_ai_model,
+    get_ollama_model,
+    get_prompt_template,
+    get_google_gemini_model,
+)
 
 logger = Logger()
 
@@ -22,15 +27,17 @@ matplotlib.rc_file("./.matplotlib/.matplotlibrc");
 
 # page settings
 st.set_page_config(page_title="Excel Chat", layout="wide")
-st.header("What ExcelChat can do?")
-st.text("ExcelChat is a lightweight data analysis app powered by LLM, showcasing how LLM can revolutionize the future"
-        "of data analysis.")
-st.markdown("""List of todos
- - [x] Add memory
- - [x] Support non-latin text in chart
- - [ ] Sub questions support
-""")
+st.header("InsightPilot AI – Your Intelligent Data Analyst")
+st.text("InsightPilot AI is an enterprise-grade data analysis assistant powered by Large Language Models (LLMs), enabling business users to extract insights, generate visualizations, and make data-driven decisions using natural language.")
 
+st.markdown("""
+### Key Capabilities
+- Conversational data analysis on Excel/CSV datasets
+- Automated insight generation without SQL or coding
+- Intelligent chart creation and visualization
+- Context-aware memory for multi-turn analysis
+- Supports multilingual datasets and queries
+""")
 
 class AgentWrapper:
     id: str
@@ -48,12 +55,12 @@ class AgentWrapper:
         elif op == "OpenAI":
             if st.session_state.api_token != "":
                 llm = get_open_ai_model(st.session_state.api_token)
-        elif op == "Baidu/AIStudio-Ernie-Bot":
-            if st.session_state.access_token != "":
-                llm = get_baidu_as_model(st.session_state.access_token)
-        elif op == "Baidu/Qianfan-Ernie-Bot":
-            if st.session_state.client_id != "" and st.session_state.client_secret != "":
-                llm = get_baidu_qianfan_model(st.session_state.client_id, st.session_state.client_secret)
+        elif op == "Google Gemini":
+            if st.session_state.google_api_key != "":
+                llm = get_google_gemini_model(
+                    st.session_state.google_api_key,
+                    st.session_state.google_model
+                )
         if llm is None:
             st.toast("LLM initialization failed, check LLM configuration", icon="🫤")
         return llm
@@ -118,7 +125,10 @@ counter = st.markdown("")
 
 # Sidebar layout
 with st.sidebar:
-    option = st.selectbox("Choose LLM", ["OpenAI", "Baidu/AIStudio-Ernie-Bot", "Baidu/Qianfan-Ernie-Bot", "Ollama"])
+    option = st.selectbox(
+        "Choose LLM",
+        ["OpenAI", "Google Gemini","Ollama"]
+    )
 
     # Initialize session keys
     if "api_token" not in st.session_state:
@@ -133,21 +143,32 @@ with st.sidebar:
         st.session_state.client_id = ""
     if "client_secret" not in st.session_state:
         st.session_state.client_secret = ""
+    if "google_api_key" not in st.session_state:
+        st.session_state.google_api_key = ""
+    if "google_model" not in st.session_state:
+        st.session_state.google_model = "gemini-2.5-flash"
 
     # Initialize model configration panel
     if option == "OpenAI":
         api_token = st.text_input("API Token", st.session_state.api_token, type="password", placeholder="Api token")
-    elif option == "Baidu/AIStudio-Ernie-Bot":
-        access_token = st.text_input("Access Token", st.session_state.access_token, type="password",
-                                     placeholder="Access token")
-    elif option == "Baidu/Qianfan-Ernie-Bot":
-        client_id = st.text_input("Client ID", st.session_state.client_id, placeholder="Client ID")
-        client_secret = st.text_input("Client Secret", st.session_state.client_secret, type="password",
-                                      placeholder="Client Secret")
+    elif option == "Google Gemini":
+        google_api_key = st.text_input(
+            "Google API Key",
+            st.session_state.google_api_key,
+            type="password",
+            placeholder="Google API key"
+        )
+        google_model = st.selectbox(
+            "Choose Gemini Model",
+            ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-1.5-flash"],
+            index=["gemini-2.5-flash", "gemini-2.5-pro", "gemini-1.5-flash"].index(
+                st.session_state.google_model
+            ) if st.session_state.google_model in ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-1.5-flash"] else 0
+        )
     elif option == "Ollama":
         ollama_model = st.selectbox(
             "Choose Ollama Model",
-            ["starcoder:7b", "codellama:7b-instruct-q8_0", "zephyr:7b-alpha-q8_0"]
+            ["starcoder:7b", "codellama:7b-instruct-q8_0", "zephyr:7b-alpha-q8_0", "qwen3:8b"]
         )
         ollama_base_url = st.text_input("Ollama BaseURL", st.session_state.ollama_base_url,
                                         placeholder="http://localhost:11434")
@@ -166,18 +187,14 @@ with st.sidebar:
         if api_token != st.session_state.api_token:
             st.session_state.api_token = api_token
             st.session_state.llm_ready = False
-    elif option == "Baidu/AIStudio-Ernie-Bot":
-        if not access_token:
-            info.error("Invalid Access Token")
-        if access_token != st.session_state.access_token:
-            st.session_state.access_token = access_token
+    elif option == "Google Gemini":
+        if not google_api_key:
+            info.error("Invalid Google API Key")
+        if google_api_key != st.session_state.google_api_key:
+            st.session_state.google_api_key = google_api_key
             st.session_state.llm_ready = False
-    elif option == "Baidu/Qianfan-Ernie-Bot":
-        if client_id != st.session_state.client_id:
-            st.session_state.client_id = client_id
-            st.session_state.llm_ready = False
-        if client_secret != st.session_state.client_secret:
-            st.session_state.client_secret = client_secret
+        if google_model != st.session_state.google_model:
+            st.session_state.google_model = google_model
             st.session_state.llm_ready = False
     elif option == "Ollama":
         if ollama_model != st.session_state.ollama_model:
