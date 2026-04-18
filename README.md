@@ -60,3 +60,4 @@ Run the following command in the terminal, then you will get the app's link open
 streamlit run Home.py
 ```
 # InsightPlot_AI
+# InsightPlot_AI
